@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAuthor>
+  <Author>
+    <authorName>Воробьев Максим Андреевич</authorName>
+    <phNumber>+7-921-146-2951</phNumber>
+  </Author>
+  <Author>
+    <authorName>Завадская Елена Юрьевна</authorName>
+    <phNumber>+7-924-890-36-60</phNumber>
+  </Author>
+    <Author>
+    <authorName>Зимняков Алексей Андреевич</authorName>
+    <phNumber>+7-914-730-94-57</phNumber>
+  </Author>
+</ArrayOfAuthor>
