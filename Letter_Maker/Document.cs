@@ -15,117 +15,22 @@ namespace Letter_Maker
 
         public Document() { }
 
-        /// Метод для создания документа с таблицей описывающей передаваемые файлы
-
-        public void MakeDocument(string theWay, int option,ref List<string> Aut_Ch)
+        // Перечисления организаций
+        public enum organisationList
         {
-            Word.Application fileOpen = new Word.Application();
-            Word.Document? dc = null;
-            string? fName = null;
-            int paragraphPos = 1;
-            switch (option)
-            {
-                case 0:// Таблица
-                    object missing = System.Reflection.Missing.Value;
-                    dc = fileOpen.Documents.Add(ref missing, ref missing, ref missing, ref missing);
-                    fName = "\\таблица.doc";
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    dc.PageSetup.LeftMargin = (float)50;
-                    dc.PageSetup.TopMargin = (float)50;
-                    break;
-                case 1:// КИТ
-                    dc = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
-                    fName = $"\\{DateTime.Now.ToString("yyyy.MM.dd")} М.А.Еремин С.Э.Усачеву - Материалы для адаптации ст. " + Aut_Ch[3] + $".doc";
-                    paragraphPos = 19;
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    listOfChage(ref fileOpen,ref Aut_Ch);
-                    break;
-                case 2:// Сетунь
-                    dc = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Setun.doc", ReadOnly: false);
-                    fName = $"\\{DateTime.Now.ToString("yyyy.MM.dd")} М.А.Еремин П.В.Бармину - Материалы для адаптации ст. " + Aut_Ch[3] +".doc";
-                    paragraphPos = 19;
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
-                case 3: // Техтранс
-                    dc = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
-                    fName = $"\\{DateTime.Now.ToString("yyyy.MM.dd")} М.А.Ерёмин А.С.Павлову - Материалы для адаптации ст. "+ Aut_Ch[3] + ".doc";
-                    paragraphPos = 23;
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
-                case 4: // АДК СЦБ
-                    dc = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADK.doc", ReadOnly: false);
-                    fName = $"\\{DateTime.Now.ToString("yyyy.MM.dd")} М.А.Еремин С.А.Панову - Материалы для адаптации ПО ст. " + Aut_Ch[3] + ".doc";
-                    paragraphPos = 18;
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
-                /////////////////////////// !!!!!!!!!!!!!!!!!! Поправить Параграфы и Шаблоны !!!!!!!!!!!!!!!!!!
-                case 5: // Юг РКП
-                    dc = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugKrug.doc", ReadOnly: false);
-                    fName = $"\\{DateTime.Now.ToString("yyyy.MM.dd")}  М.А.Еремин Л.П.Кузнецову - Материалы для адаптации ПО ст. " + Aut_Ch[3] + ".doc";
-                    paragraphPos = 18;
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
-                case 6: // Юг, тот что пел про Владимирский Централ
-                    dc = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
-                    fName = $"\\{DateTime.Now.ToString("yyyy.MM.dd")} М.А. Еремин В.В. Аракельяну - Материалы для адаптации ПО ст. " + Aut_Ch[3] + ".doc";
-                    paragraphPos = 18;
-                    fileOpen.Visible = false;
-                    dc.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
-            }
-
-            
-            DirectoryInfo dir = new DirectoryInfo(theWay);
-            int kolich = dir.GetFiles().Length;
-
-            Word.Range wordrange = dc.Paragraphs[paragraphPos].Range;
-            Object defaultTableBehavior = WdDefaultTableBehavior.wdWord9TableBehavior;
-            Object autoFitBehavior = WdAutoFitBehavior.wdAutoFitWindow;
-
-            //Добавляем таблицу и получаем объект wordtable 
-            Word.Table wordtable = dc.Tables.Add(wordrange, kolich + 1, 5, ref defaultTableBehavior, ref autoFitBehavior);
-            Word.Table tbl = dc.Tables[1];
-            tbl.Range.Font.Size = 9;
-            tbl.Range.Paragraphs.LineSpacing = 12;
-            
-            /// Вызов метода для формирования заголовка таблицы
-            Zagalovok(tbl);
-
-            int ch = 2; // Потому что 1 - это заголовок
-            foreach (FileInfo fl in dir.GetFiles())
-            {
-                tbl.Rows[ch].Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                tbl.Cell(ch, 1).Range.Text = (ch - 1).ToString();
-                tbl.Cell(ch, 2).Range.Text = Name(fl.Name);
-                tbl.Cell(ch, 3).Range.Text = fl.Name;
-                tbl.Cell(ch, 4).Range.Text = fl.Length.ToString("N0");
-                tbl.Cell(ch, 5).Range.Text = fl.CreationTime.ToString("g");
-                ch++;
-            }
-            /// сохраняем файл и закрываем его
-            dc.SaveAs2(theWay + fName);
-            dc.Close();
-            /// делаем красиво по памяти, закрываем Word и выводим сообщение, что всё готово
-            dc = null;
-            fileOpen.Quit();
-            fileOpen = null;
-            MessageBox.Show("Файл сформирован");
+            Table,
+            Kit,
+            Setun,
+            Textrans,
+            ADK,
+            YugRkp,
+            YugKrug
         }
 
-        /// Метод для замены текста в документе
-
-        public void FindAndReplace(Word.Application fileOpen, object findText, object replaceWithText)
+        /// private методы 
+        
+        // Метод для замены текста в документе
+        private void FindAndReplace(Word.Application fileOpen, object findText, object replaceWithText)
         {
             // Задаем параметры замены
             object matchCase = false;
@@ -137,7 +42,7 @@ namespace Letter_Maker
             object format = false;
             object replace = 2;
             object wrap = 1;
-            
+
             // Добавляем форматирование подчеркивания к замененному тексту
             fileOpen.Selection.Font.Underline = WdUnderline.wdUnderlineSingle;
 
@@ -145,11 +50,11 @@ namespace Letter_Maker
             fileOpen.Selection.Find.Execute(ref findText, ref matchCase, ref matchWholeWord,
                 ref matchWildCards, ref matchSoundsLike, ref matchAllWordForms, ref forward, ref wrap, ref format, ref replaceWithText, ref replace);
 
-            
+
         }
 
-        /// Метод для формирования заголовка таблицы
-        public void Zagalovok(Word.Table table)
+        // Метод для формирования заголовка таблицы
+        private void Zagalovok(Word.Table table)
         {
             table.Rows[1].Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
             table.Range.Paragraphs.SpaceBefore = 3;
@@ -169,8 +74,8 @@ namespace Letter_Maker
             table.Cell(1, 5).Range.Text = "Время изм. файла";
         }
 
-        /// Метод для пакетной замены тегов на текст в документе
-        void listOfChage(ref Word.Application fl, ref List<string> choise)
+        // Метод для пакетной замены тегов на текст в документе
+        private void listOfChage(ref Word.Application fl, ref List<string> choise)
         {
             FindAndReplace(fl, "<date>", DateTime.Now.ToString("d"));
             FindAndReplace(fl, "<author>", choise[0]);
@@ -182,7 +87,6 @@ namespace Letter_Maker
                 FindAndReplace(fl, "<okt_mail>", "pele1968@mail.ru");
                 FindAndReplace(fl, "<cm>", ",");
                 FindAndReplace(fl, "<dt>", ".");
-
             }
             else
             {
@@ -194,18 +98,8 @@ namespace Letter_Maker
             FindAndReplace(fl, "<station>", choise[3]);
         }
 
-        public bool AskWindow(List<string> listFiles)
-        {
-            var result = System.Windows.MessageBox.Show(
-                                                "Не хватетследующих файлов:\n\n" + String.Join("\n", listFiles) + "\n\nПродолжить?",
-                                                "ВНИМАНИЕ!!!",
-                                                MessageBoxButton.YesNo,
-                                                MessageBoxImage.Warning);
-            return result == MessageBoxResult.Yes;
-        }
-
-        /// Метод для формирования Наименование документа в таблице (2 столбец)
-        private string Name(string fName)
+        // Метод для формирования Наименование документа в таблице (2 столбец)
+        private string GiveFileDiscription(string fName)
         {
             if (fName.Contains(".xls"))
                 if (fName.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
@@ -259,5 +153,154 @@ namespace Letter_Maker
             else
                 return "-";
         }
+
+        
+        
+        
+        /// public методы 
+
+        /// <summary>
+        /// Метод для создания документа с таблицей описывающей передаваемые файлы
+        /// </summary>
+        /// <param name="theWay">Путь выбранный оператором</param>
+        /// <param name="option">Организация для которой будет формироваться письмо</param>
+        /// <param name="Aut_Ch">Входные данные, введенные оператором</param> 
+        public void MakeDocument(string theWay, organisationList option,ref List<string> Aut_Ch)
+        {
+            // Избегаем magic-number
+            int startPosition = 1;       
+            
+            Word.Application fileOpen = new Word.Application();
+            Word.Document? wordDocument = null;
+            string? fName = null;
+            int paragraphPos = startPosition;
+            switch (option)
+            {
+                case organisationList.Table:
+                    object missing = System.Reflection.Missing.Value;
+                    wordDocument = fileOpen.Documents.Add(ref missing, ref missing, ref missing, ref missing);
+                    fName = "\\таблица.doc";
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    wordDocument.PageSetup.LeftMargin = (float)50;
+                    wordDocument.PageSetup.TopMargin = (float)50;
+                    break;
+                case organisationList.Kit:
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Еремин С.Э.Усачеву", Aut_Ch[3]);
+                    paragraphPos = 19;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen,ref Aut_Ch);
+                    break;
+                case organisationList.Setun:// Сетунь
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Setun.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Еремин П.В.Бармину", Aut_Ch[3]);
+                    paragraphPos = 19;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.Textrans:
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Ерёмин А.С.Павлову", Aut_Ch[3]);
+                    paragraphPos = 23;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.ADK: 
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADK.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Еремин С.А.Панову", Aut_Ch[3]);
+                    paragraphPos = 18;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.YugRkp:
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugKrug.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Еремин Л.П.Кузнецову", Aut_Ch[3]);
+                    paragraphPos = 19;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.YugKrug: 
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А. Еремин В.В. Аракельяну", Aut_Ch[3]);
+                    paragraphPos = 18;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+            }
+
+            
+            DirectoryInfo dir = new DirectoryInfo(theWay);
+            int kolich = dir.GetFiles().Length;
+
+            Word.Range wordrange = wordDocument.Paragraphs[paragraphPos].Range;
+            Object defaultTableBehavior = WdDefaultTableBehavior.wdWord9TableBehavior;
+            Object autoFitBehavior = WdAutoFitBehavior.wdAutoFitWindow;
+
+            //Добавляем таблицу и получаем объект wordtable 
+            Word.Table wordtable = wordDocument.Tables.Add(wordrange, kolich + 1, 5, ref defaultTableBehavior, ref autoFitBehavior);
+            Word.Table tbl = wordDocument.Tables[1];
+            tbl.Range.Font.Size = 9;
+            tbl.Range.Paragraphs.LineSpacing = 12;
+            
+            /// Вызов метода для формирования заголовка таблицы
+            Zagalovok(tbl);
+
+            int rowNumber = startPosition; 
+            foreach (FileInfo fl in dir.GetFiles())
+            {
+                tbl.Rows[rowNumber].Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                tbl.Cell(rowNumber+1, 1).Range.Text = rowNumber.ToString();
+                tbl.Cell(rowNumber+1, 2).Range.Text = GiveFileDiscription(fl.Name);
+                tbl.Cell(rowNumber+1, 3).Range.Text = fl.Name;
+                tbl.Cell(rowNumber+1, 4).Range.Text = fl.Length.ToString("N0");
+                tbl.Cell(rowNumber+1, 5).Range.Text = fl.CreationTime.ToString("g");
+                rowNumber++;      
+            }
+            /// сохраняем файл и закрываем его
+            wordDocument.SaveAs2(theWay + fName);
+            wordDocument.Close();
+            /// делаем красиво по памяти, закрываем Word и выводим сообщение, что всё готово
+            wordDocument = null;
+            fileOpen.Quit();
+            fileOpen = null;
+            MessageBox.Show("Файл сформирован");
+        }
+
+        
+
+        /// Метод вызова окна для уточнения - а все ли файлы есть?
+        public bool WindowOfClarify(List<string> listFiles)
+        {
+            var result = System.Windows.MessageBox.Show(
+                                                "Не хватетследующих файлов:\n\n" + String.Join("\n", listFiles) + "\n\nПродолжить?",
+                                                "ВНИМАНИЕ!!!",
+                                                MessageBoxButton.YesNo,
+                                                MessageBoxImage.Warning);
+            return result == MessageBoxResult.Yes;
+        }
+
+        private string MakeFileName(string aliceBob, string stationChoice)
+        {
+            return $"\\{DateTime.Now.ToString("yyyy.MM.dd")} {aliceBob} - Материалы для адаптации ПО ст." + stationChoice + ".doc";
+        }
+
+        
+
+        public bool CheckFileList (string selectedPath, List<string> listOfFiles)
+        {
+            DirectoryInfo dir = new DirectoryInfo(selectedPath);
+            List<string> listFiles = new List<string>();
+            List<string> listADK = new List<string>();
+            return true;
+        }
     }
+
+
 }

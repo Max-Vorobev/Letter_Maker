@@ -15,7 +15,7 @@ namespace Letter_Maker.Organisations
             {
                 if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(   folderBrowserDialog.SelectedPath,
-                                    3,
+                                    organisationList.Textrans,
                                     ref choice);
             }
         }
@@ -24,7 +24,11 @@ namespace Letter_Maker.Organisations
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listTextr = new List<string>() { "ChangeList", "Таблицы сигналов ТС, команд ТУ и ОТУ", "Мнемосхема перегона", "Мнемосхема станции", "Список команд управления (ТУ)", "Список команд управления и ответственных команд" };
+            List<string> listTextr = new List<string>() {   "Список изменений сигналов состояния напольных устройств",
+                                                            "Мнемосхема перегона",
+                                                            "Мнемосхема станции",
+                                                            "Таблицы сигналов ТС, команд ТУ и ОТУ", //signal list
+                                                            };
 
             foreach (FileInfo fl in dir.GetFiles())
             {
@@ -33,7 +37,7 @@ namespace Letter_Maker.Organisations
                     case ".xls":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("ChangeList");
+                            listFiles.Add("Список изменений сигналов состояния напольных устройств");
                         }
                         break;
                     case ".jpg":
@@ -48,20 +52,16 @@ namespace Letter_Maker.Organisations
                         }
                         break;
                     case ".xlsx":
-                        if (fl.Name.Contains("Tu", StringComparison.OrdinalIgnoreCase))
+                        if (fl.Name.Contains("signallist", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Список команд управления (ТУ)");
-                        }
-                        else if (fl.Name.Contains("Otu", StringComparison.OrdinalIgnoreCase))
-                        {
-                            listFiles.Add("Список команд управления и ответственных команд");
+                            listFiles.Add("Таблицы сигналов ТС, команд ТУ и ОТУ");
                         }
                         break;
                 }
             }
             listFiles = listTextr.Except(listFiles.Distinct().ToList()).ToList();
             if (listFiles.Count > 0)
-                return AskWindow(listFiles);
+                return WindowOfClarify(listFiles);
             else
                 return true;
 

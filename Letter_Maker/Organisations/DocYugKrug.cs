@@ -14,7 +14,7 @@ namespace Letter_Maker.Organisations
             {
                 if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(   folderBrowserDialog.SelectedPath,
-                                    6,
+                                    organisationList.YugKrug,
                                     ref choice);
             }
         }
@@ -23,7 +23,7 @@ namespace Letter_Maker.Organisations
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listYugKrug = new List<string>() {   "ChangeList", 
+            List<string> listYugKrug = new List<string>() { "ChangeList", 
                                                             "SignalList",
                                                             "Список групп сигналов состояния напольных устройств",
                                                             "Мнемосхема перегона",
@@ -65,7 +65,7 @@ namespace Letter_Maker.Organisations
             }
             listFiles = listYugKrug.Except(listFiles.Distinct().ToList()).ToList();
             if (listFiles.Count > 0)
-                return AskWindow(listFiles);
+                return WindowOfClarify(listFiles);
             else
                 return true;
 

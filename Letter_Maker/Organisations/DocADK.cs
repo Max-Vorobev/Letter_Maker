@@ -14,16 +14,20 @@ namespace Letter_Maker.Organisations
             {
                 if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(   folderBrowserDialog.SelectedPath,
-                                    4,
+                                    organisationList.ADK,
                                     ref choice);
             }
+
+
+
+
         }
 
         private bool Check(string selectedPath)
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listADK = new List<string>() {   "Мнемосхема каналов УСО",
+            List<string> listADK = new List<string>() {     "Мнемосхема каналов УСО",
                                                             "Мнемосхема шкафа УВК",
                                                             "ChangeList",
                                                             "SignalList",
@@ -89,7 +93,7 @@ namespace Letter_Maker.Organisations
             }
             listFiles = listADK.Except(listFiles.Distinct().ToList()).ToList();
             if (listFiles.Count > 0)
-                return AskWindow(listFiles);
+                return WindowOfClarify(listFiles);
             else
                 return true;
 

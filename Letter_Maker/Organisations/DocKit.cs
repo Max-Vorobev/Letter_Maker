@@ -10,13 +10,23 @@ namespace Letter_Maker.Organisations
 {
     internal class DocKit : Document
     {
+        List<string> listKit = new List<string>() {     "Список изменений сигналов состояния напольных устройств",
+                                                        "Список сигналов состояния напольных объектов",
+                                                        "Список сигналов состояния напольных устройств",
+                                                        "Список сигналов состояния устройств УВК РА",
+                                                        "Список сигналов состояния устройств УСО",
+                                                        "Список сигналов состояния устройств КСУ",
+                                                        "Мнемосхема перегона",
+                                                        "Мнемосхема станции",
+                                                        "Мнемосхема каналов УСО",
+                                                        "Мнемосхема шкафа УВК" };
         public DocKit(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice)
         {
             if (folderBrowserDialog.ShowDialog() == WinForms.DialogResult.OK)
             {
                 if (Check(folderBrowserDialog.SelectedPath))
-                    MakeDocument(   folderBrowserDialog.SelectedPath,
-                                    1,
+                    MakeDocument(folderBrowserDialog.SelectedPath,
+                                    organisationList.Kit,
                                     ref choice);
             }
         }
@@ -24,16 +34,7 @@ namespace Letter_Maker.Organisations
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listKit = new List<string>() { "ChangeList",
-                                                        "SignalList",
-                                                        "Список сигналов состояния напольных устройств",
-                                                        "Список сигналов состояния устройств УВК РА",
-                                                        "Список сигналов состояния устройств УСО",
-                                                        "ksuDiag",
-                                                        "Мнемосхема перегона",
-                                                        "Мнемосхема станции",
-                                                        "Мнемосхема каналов УСО",
-                                                        "Мнемосхема шкафа УВК" };
+            
 
 
             foreach (FileInfo fl in dir.GetFiles())
@@ -43,11 +44,11 @@ namespace Letter_Maker.Organisations
                     case ".xls":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("ChangeList");
+                            listFiles.Add("Список изменений сигналов состояния напольных устройств");
                         }
                         else if (fl.Name.Contains("SignalList", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("SignalList");
+                            listFiles.Add("Список сигналов состояния напольных объектов");
                         }
                         break;
                     case ".xml":
@@ -65,7 +66,7 @@ namespace Letter_Maker.Organisations
                         }
                         else if (fl.Name.Contains("ksuDiag", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("ksuDiag");
+                            listFiles.Add("Список сигналов состояния устройств КСУ");
                         }
                         break;
                     case ".jpg":
@@ -91,7 +92,7 @@ namespace Letter_Maker.Organisations
             }
             listFiles = listKit.Except(listFiles.Distinct().ToList()).ToList();
             if (listFiles.Count > 0)
-                return AskWindow(listFiles);
+                return WindowOfClarify(listFiles);
             else
                 return true;
 

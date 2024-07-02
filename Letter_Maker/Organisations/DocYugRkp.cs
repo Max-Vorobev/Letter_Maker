@@ -14,7 +14,7 @@ namespace Letter_Maker.Organisations
             {
                 if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(folderBrowserDialog.SelectedPath,
-                                        5,
+                                        organisationList.YugRkp,
                                         ref choice);
             }
         }
@@ -65,7 +65,7 @@ namespace Letter_Maker.Organisations
             }
             listFiles = listYugRkp.Except(listFiles.Distinct().ToList()).ToList();
             if (listFiles.Count > 0)
-                return AskWindow(listFiles);
+                return WindowOfClarify(listFiles);
             else
                 return true;
 

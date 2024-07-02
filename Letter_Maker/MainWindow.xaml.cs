@@ -19,8 +19,8 @@ namespace Letter_Maker
 
         public MainWindow()
         {
-
             InitializeComponent();
+            int startPosition = 0;
 
             XmlSerializer formatter = new XmlSerializer(typeof(Author[]));
 
@@ -46,14 +46,14 @@ namespace Letter_Maker
             List<string> listRailRoad = new List<string> { "Горьковской", "Забайкальской", "Московской", "Октябрьской", "Приволжской", "Северной", "Северо-Кавказской" };
 
             Author_Choise.ItemsSource = author.spis.Keys.Select(key => key.Split(' ').First());
-            Author_Choise.SelectedIndex = 0;
+            Author_Choise.SelectedIndex = startPosition;
             RailRoad_Choise.ItemsSource = listRailRoad;
-            RailRoad_Choise.SelectedIndex = 0;
+            RailRoad_Choise.SelectedIndex = startPosition;
         }
 
         /// Метод, в котором вызывается диалоговое окно для выбора папки, где лежат файлы
         /// <returns> Номер нажатой кнопки </returns>
-        public WinForms.FolderBrowserDialog Folder_choice()
+        private WinForms.FolderBrowserDialog Folder_choice()
         {
             WinForms.FolderBrowserDialog dialog = new WinForms.FolderBrowserDialog();
             dialog.InitialDirectory = "Z:\\Станции";
@@ -67,7 +67,7 @@ namespace Letter_Maker
             {
                 Document dc = new Document();
                 List<string> list = new List<string>();
-                dc.MakeDocument(foulder.SelectedPath,0,ref list);
+                dc.MakeDocument(foulder.SelectedPath,Document.organisationList.Table,ref list);
             }
         }
 
@@ -75,9 +75,9 @@ namespace Letter_Maker
         {
             DocKit kit = new DocKit(Folder_choice(),
                                     new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                    author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                    RailRoad_Choise.SelectedItem.ToString(),
-                                                    Station_Name.Text});
+                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                        RailRoad_Choise.SelectedItem.ToString(),
+                                                        Station_Name.Text});
         }
 
 
@@ -86,9 +86,9 @@ namespace Letter_Maker
         {
             DocSetun setun = new DocSetun(  Folder_choice(),
                                             new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                            RailRoad_Choise.SelectedItem.ToString(),
-                                                            Station_Name.Text});
+                                                                author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                                RailRoad_Choise.SelectedItem.ToString(),
+                                                                Station_Name.Text});
 
         }
 
@@ -96,35 +96,35 @@ namespace Letter_Maker
         {
             DocTextrans textrans = new DocTextrans( Folder_choice(),
                                                     new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                                    author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                                    RailRoad_Choise.SelectedItem.ToString(),
-                                                                    Station_Name.Text});
+                                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                                        RailRoad_Choise.SelectedItem.ToString(),
+                                                                        Station_Name.Text});
         }
         private void adk_table_Click(object sender, RoutedEventArgs e)
         {
             DocADK adk = new DocADK(Folder_choice(),
                                     new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                                    author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                                    RailRoad_Choise.SelectedItem.ToString(),
-                                                                    Station_Name.Text});
+                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                        RailRoad_Choise.SelectedItem.ToString(),
+                                                        Station_Name.Text});
         }
 
         private void yug_rkp_table_Click(object sender, RoutedEventArgs e)
         {
             DocYugRkp yugRkp = new DocYugRkp(  Folder_choice(),
                                         new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                                    author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                                    RailRoad_Choise.SelectedItem.ToString(),
-                                                                    Station_Name.Text});
+                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                            RailRoad_Choise.SelectedItem.ToString(),
+                                                            Station_Name.Text});
         }
 
         private void yug_krug_table_Click(object sender, RoutedEventArgs e)
         {
             DocYugKrug yugKrug = new DocYugKrug(Folder_choice(),
                                         new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                                    author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                                    RailRoad_Choise.SelectedItem.ToString(),
-                                                                    Station_Name.Text});
+                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                            RailRoad_Choise.SelectedItem.ToString(),
+                                                            Station_Name.Text});
         }
 
     }
