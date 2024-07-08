@@ -33,7 +33,7 @@ namespace Letter_Maker.Organisations
                                                             "Мнемосхема перегона",
                                                             "Мнемосхема станции",
                                                             "Таблица команд ТУ",// xlsx по названию ТУ/ОТУ
-                                                            "Таблица команд ОТУ"};// или
+                                                            "Таблица команд ТУ/ОТУ"};// или
 
             foreach (FileInfo fl in dir.GetFiles())
             {
@@ -65,6 +65,16 @@ namespace Letter_Maker.Organisations
                         else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Станция", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема станции");
+                        }
+                        break;
+                    case ".xlsx":
+                        if (fl.Name.Contains("Таблица команд ТУ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (fl.Name.Contains("ОТУ", StringComparison.OrdinalIgnoreCase))
+                            {
+                                listFiles.Add("Таблица команд ТУ/ОТУ");
+                            }
+                            listFiles.Add("Таблица команд ТУ");
                         }
                         break;
                 }

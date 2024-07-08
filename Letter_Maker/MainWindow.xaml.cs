@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Xml.Serialization;
 using Letter_Maker.Organisations;
+using static System.Net.Mime.MediaTypeNames;
 using WinForms = System.Windows.Forms;
 
 
@@ -15,7 +17,6 @@ namespace Letter_Maker
     public partial class MainWindow : System.Windows.Window
     {
         Author author = new Author();
-
 
         public MainWindow()
         {
@@ -70,62 +71,94 @@ namespace Letter_Maker
                 dc.MakeDocument(foulder.SelectedPath,Document.organisationList.Table,ref list);
             }
         }
-
+        /// Метод для каждой отдельной организации
         private void kit_table_Click(object sender, RoutedEventArgs e)
         {
-            DocKit kit = new DocKit(Folder_choice(),
-                                    new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocKit kit = new DocKit(Folder_choice(),
+                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                         author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                         RailRoad_Choise.SelectedItem.ToString(),
                                                         Station_Name.Text});
+            }
         }
 
 
 
         private void setun_table_Click(object sender, RoutedEventArgs e)
         {
-            DocSetun setun = new DocSetun(  Folder_choice(),
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocSetun setun = new DocSetun(Folder_choice(),
                                             new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                                 author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                                 RailRoad_Choise.SelectedItem.ToString(),
                                                                 Station_Name.Text});
+            }
 
         }
 
         private void tex_tranc_table_Click(object sender, RoutedEventArgs e)
         {
-            DocTextrans textrans = new DocTextrans( Folder_choice(),
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocTextrans textrans = new DocTextrans(Folder_choice(),
                                                     new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                                         author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                                         RailRoad_Choise.SelectedItem.ToString(),
                                                                         Station_Name.Text});
+            }
         }
         private void adk_table_Click(object sender, RoutedEventArgs e)
         {
-            DocADK adk = new DocADK(Folder_choice(),
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocADK adk = new DocADK(Folder_choice(),
                                     new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                         author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                         RailRoad_Choise.SelectedItem.ToString(),
                                                         Station_Name.Text});
+            }
         }
 
         private void yug_rkp_table_Click(object sender, RoutedEventArgs e)
         {
-            DocYugRkp yugRkp = new DocYugRkp(  Folder_choice(),
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocYugRkp yugRkp = new DocYugRkp(Folder_choice(),
                                         new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                             author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                             RailRoad_Choise.SelectedItem.ToString(),
                                                             Station_Name.Text});
+            }
         }
 
         private void yug_krug_table_Click(object sender, RoutedEventArgs e)
         {
-            DocYugKrug yugKrug = new DocYugKrug(Folder_choice(),
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocYugKrug yugKrug = new DocYugKrug(Folder_choice(),
                                         new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                             author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                             RailRoad_Choise.SelectedItem.ToString(),
                                                             Station_Name.Text});
+            }
         }
 
+        /// Метод вызова окна для уточнения - где имя станции?
+        public bool WindowOfEmptiness(string stName)
+        {
+            if (string.IsNullOrEmpty(stName))
+            {
+                var result = System.Windows.MessageBox.Show(
+                                                    "Не хватет имени станции\n\nПродолжить?",
+                                                    "ВНИМАНИЕ!!!",
+                                                    MessageBoxButton.YesNo,
+                                                    MessageBoxImage.Warning);
+                return result == MessageBoxResult.Yes;
+            }
+            return true;
+        }
     }
 }

@@ -17,10 +17,6 @@ namespace Letter_Maker.Organisations
                                     organisationList.ADK,
                                     ref choice);
             }
-
-
-
-
         }
 
         private bool Check(string selectedPath)
@@ -29,8 +25,8 @@ namespace Letter_Maker.Organisations
             List<string> listFiles = new List<string>();
             List<string> listADK = new List<string>() {     "Мнемосхема каналов УСО",
                                                             "Мнемосхема шкафа УВК",
-                                                            "ChangeList",
-                                                            "SignalList",
+                                                            "Список изменений сигналов состояния напольных устройств",
+                                                            "Список сигналов состояния напольных объектов",
                                                             "Мнемосхема перегона",
                                                             "Мнемосхема станции",
                                                             "Список сигналов состояния напольных устройств",
@@ -45,11 +41,11 @@ namespace Letter_Maker.Organisations
                     case ".xls":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("ChangeList");
+                            listFiles.Add("Список изменений сигналов состояния напольных устройств");
                         }
                         else if (fl.Name.Contains("SignalList", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("SignalList");
+                            listFiles.Add("Список сигналов состояния напольных объектов");
                         }
                         break;
                     case ".xml":

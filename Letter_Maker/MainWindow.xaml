@@ -47,7 +47,7 @@
                                 <Grid>
                                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
                                     <ScrollViewer x:Name="PART_ContentHost" Focusable="false"/>
-                                    <TextBlock x:Name="PlaceholderText" Text="Введите текст здесь" Foreground="Gray" Margin="5,0,0,0"
+                                    <TextBlock x:Name="PlaceholderText" Text="Введите название станции" Foreground="Gray" Margin="5,0,0,0"
                                        Visibility="Collapsed" IsHitTestVisible="False"/>
                                 </Grid>
                                 <ControlTemplate.Triggers>

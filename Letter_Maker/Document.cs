@@ -127,7 +127,7 @@ namespace Letter_Maker
                 }
                 else if (fName.Contains("ksuDiag", StringComparison.OrdinalIgnoreCase))
                 {
-                    return "ksuDiag";
+                    return "Список сигналов состояния устройств КСУ";
                 }
                 else
                     return "-";
@@ -147,6 +147,13 @@ namespace Letter_Maker
                 else if (fName.Contains("Uvk", StringComparison.OrdinalIgnoreCase))
                 {
                     return "Мнемосхема шкафа УВК";
+                }
+                else
+                    return "-";
+            else if (fName.Contains(".xlsx"))
+                if (fName.Contains("signallist", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Таблицы сигналов ТС, команд ТУ и ОТУ";
                 }
                 else
                     return "-";
@@ -176,7 +183,7 @@ namespace Letter_Maker
             int paragraphPos = startPosition;
             switch (option)
             {
-                case organisationList.Table:
+                case organisationList.Table: // просто таблица
                     object missing = System.Reflection.Missing.Value;
                     wordDocument = fileOpen.Documents.Add(ref missing, ref missing, ref missing, ref missing);
                     fName = "\\таблица.doc";
@@ -185,7 +192,7 @@ namespace Letter_Maker
                     wordDocument.PageSetup.LeftMargin = (float)50;
                     wordDocument.PageSetup.TopMargin = (float)50;
                     break;
-                case organisationList.Kit:
+                case organisationList.Kit: // АПК ДК КИТ
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.Э.Усачеву", Aut_Ch[3]);
                     paragraphPos = 19;
@@ -201,7 +208,7 @@ namespace Letter_Maker
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
-                case organisationList.Textrans:
+                case organisationList.Textrans: // ДЦ Тракт - "Техтрнас"
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Ерёмин А.С.Павлову", Aut_Ch[3]);
                     paragraphPos = 23;
@@ -209,7 +216,7 @@ namespace Letter_Maker
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
-                case organisationList.ADK: 
+                case organisationList.ADK: // АДК СЦБ ЮгПа
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADK.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.А.Панову", Aut_Ch[3]);
                     paragraphPos = 18;
@@ -217,7 +224,7 @@ namespace Letter_Maker
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
-                case organisationList.YugRkp:
+                case organisationList.YugRkp: // ДЦ Юг с Ркп
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugKrug.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин Л.П.Кузнецову", Aut_Ch[3]);
                     paragraphPos = 19;
@@ -225,7 +232,7 @@ namespace Letter_Maker
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
-                case organisationList.YugKrug: 
+                case organisationList.YugKrug: // ДЦ ЮГ Круг
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
                     fName = MakeFileName("М.А. Еремин В.В. Аракельяну", Aut_Ch[3]);
                     paragraphPos = 18;
@@ -279,13 +286,14 @@ namespace Letter_Maker
         public bool WindowOfClarify(List<string> listFiles)
         {
             var result = System.Windows.MessageBox.Show(
-                                                "Не хватетследующих файлов:\n\n" + String.Join("\n", listFiles) + "\n\nПродолжить?",
+                                                "Не хватет следующих файлов:\n\n" + String.Join("\n", listFiles) + "\n\nПродолжить?",
                                                 "ВНИМАНИЕ!!!",
                                                 MessageBoxButton.YesNo,
                                                 MessageBoxImage.Warning);
             return result == MessageBoxResult.Yes;
         }
 
+        /// Метод для формирования имени итогового документа
         private string MakeFileName(string aliceBob, string stationChoice)
         {
             return $"\\{DateTime.Now.ToString("yyyy.MM.dd")} {aliceBob} - Материалы для адаптации ПО ст." + stationChoice + ".doc";
