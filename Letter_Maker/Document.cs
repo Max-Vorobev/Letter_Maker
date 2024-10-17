@@ -2,11 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using Word = Microsoft.Office.Interop.Word;
+using System.Text.RegularExpressions;
 
 namespace Letter_Maker
 {
@@ -22,9 +20,10 @@ namespace Letter_Maker
             Kit,
             Setun,
             Textrans,
-            ADK,
+            ADKSCB,
             YugRkp,
-            YugKrug
+            YugKrug,
+            ASDK
         }
 
         /// private методы 
@@ -81,10 +80,12 @@ namespace Letter_Maker
             FindAndReplace(fl, "<author>", choise[0]);
             FindAndReplace(fl, "<phone>", choise[1]);
             FindAndReplace(fl, "<rr>", choise[2]);
+            
+            // В случае, если станция на октяборьской - нужно дублировать ФА для Капусты
             if (choise[2] == "Октябрьской")
             {
                 FindAndReplace(fl, "<okt>", "КОПИЯ:\vСлужба Ш Октябрьской\vдирекции инфраструктуры, \vНачальнику отдела развития и перспективных технологий \vП. А. Капусте\v");
-                FindAndReplace(fl, "<okt_mail>", "pele1968@mail.ru");
+                FindAndReplace(fl, "<okt_mail>", "sh_kapusta@orw.rzd.ru, pele1968@mail.ru");
                 FindAndReplace(fl, "<cm>", ",");
                 FindAndReplace(fl, "<dt>", ".");
             }
@@ -101,7 +102,14 @@ namespace Letter_Maker
         // Метод для формирования Наименование документа в таблице (2 столбец)
         private string GiveFileDiscription(string fName)
         {
-            if (fName.Contains(".xls"))
+            if (fName.Contains(".csv"))
+                if (fName.Contains("GroupSignalList", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Список групп сигналов состояния напольных устройств";
+                }
+                else
+                    return "-";
+            else if (fName.Contains(".xls")) // тут же и xlsx
                 if (fName.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                 {
                     return "Список изменений сигналов состояния напольных устройств";
@@ -109,6 +117,24 @@ namespace Letter_Maker
                 else if (fName.Contains("SignalList", StringComparison.OrdinalIgnoreCase))
                 {
                     return "Список сигналов состояния напольных устройств";
+                }
+                else if (fName.Contains("Таблица", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (fName.Contains("ОТУ", StringComparison.OrdinalIgnoreCase))
+                        return "Таблица ТС,ТУ и ОТУ";
+                    else if (fName.Contains("ТУ", StringComparison.OrdinalIgnoreCase))
+                        return "Таблица ТС и ТУ";
+                    else
+                        return "Таблица ТС";
+                }
+                else if (fName.Contains("ТУ", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (fName.Contains("ОТУ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return ("Таблица команд ТУ / ОТУ");
+                    }
+                    else
+                        return "Таблица команд ТУ";
                 }
                 else
                     return "-";
@@ -129,31 +155,47 @@ namespace Letter_Maker
                 {
                     return "Список сигналов состояния устройств КСУ";
                 }
+                // для АБТЦ-МШ
+                else if (fName.Contains("abtcmshDiag-data_dk", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Список сигналов состояния устройств АБТЦ-МШ";
+                }
+                //для УРЦК
+                else if (fName.Contains("urckUvkBrief", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Диагностика связей УРЦК";
+                }
+                else if (fName.Contains("urckProcessed-data", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Диагностическая информация УРЦК";
+                }
                 else
                     return "-";
             else if (fName.Contains(".jpg") || fName.Contains(".png"))
-                if (fName.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fName.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
+                if (fName.Contains("Штамп", StringComparison.OrdinalIgnoreCase))
                 {
-                    return "Мнемосхема перегона";
+                    return "Штамп схематического плана";
                 }
-                else if (fName.Contains("Station", StringComparison.OrdinalIgnoreCase))
+                else if ((fName.Contains("Station", StringComparison.OrdinalIgnoreCase)) || (fName.Contains("Станции", StringComparison.OrdinalIgnoreCase)))
                 {
                     return "Мнемосхема станции";
                 }
-                else if (fName.Contains("Uso", StringComparison.OrdinalIgnoreCase))
+                else if (fName.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fName.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
                 {
-                    return "Мнемосхема каналов УСО";
+                    return "Мнемосхема перегона";
                 }
-                else if (fName.Contains("Uvk", StringComparison.OrdinalIgnoreCase))
+                else if (fName.Contains("Uvk", StringComparison.OrdinalIgnoreCase) || fName.Contains("УВК", StringComparison.OrdinalIgnoreCase))
                 {
                     return "Мнемосхема шкафа УВК";
                 }
-                else
-                    return "-";
-            else if (fName.Contains(".xlsx"))
-                if (fName.Contains("signallist", StringComparison.OrdinalIgnoreCase))
+                else if (fName.Contains("Uso", StringComparison.OrdinalIgnoreCase) || fName.Contains("УСО", StringComparison.OrdinalIgnoreCase))
                 {
-                    return "Таблицы сигналов ТС, команд ТУ и ОТУ";
+                    return "Мнемосхема каналов УСО";
+                }
+                else if (fName.Contains("URCK", StringComparison.OrdinalIgnoreCase) || fName.Contains("УРЦК", StringComparison.OrdinalIgnoreCase))
+                {
+                    Regex regex = new Regex(@"\d+-?\d*");
+                    return "Таблица с данными ДИ модулей УРЦК " + regex.Match(fName);
                 }
                 else
                     return "-";
@@ -183,15 +225,6 @@ namespace Letter_Maker
             int paragraphPos = startPosition;
             switch (option)
             {
-                case organisationList.Table: // просто таблица
-                    object missing = System.Reflection.Missing.Value;
-                    wordDocument = fileOpen.Documents.Add(ref missing, ref missing, ref missing, ref missing);
-                    fName = "\\таблица.doc";
-                    fileOpen.Visible = false;
-                    wordDocument.Activate();
-                    wordDocument.PageSetup.LeftMargin = (float)50;
-                    wordDocument.PageSetup.TopMargin = (float)50;
-                    break;
                 case organisationList.Kit: // АПК ДК КИТ
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.Э.Усачеву", Aut_Ch[3]);
@@ -199,6 +232,22 @@ namespace Letter_Maker
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen,ref Aut_Ch);
+                    break;
+                case organisationList.ADKSCB: // АДК СЦБ ЮгПа
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADKSCB.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Еремин С.А.Панову", Aut_Ch[3]);
+                    paragraphPos = 18;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.ASDK: // АСДК
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ASDK.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Еремин С.А.Аверкиеву", Aut_Ch[3]);
+                    paragraphPos = 16;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.Setun:// Сетунь
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Setun.doc", ReadOnly: false);
@@ -208,37 +257,38 @@ namespace Letter_Maker
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
-                case organisationList.Textrans: // ДЦ Тракт - "Техтрнас"
-                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Ерёмин А.С.Павлову", Aut_Ch[3]);
-                    paragraphPos = 23;
-                    fileOpen.Visible = false;
-                    wordDocument.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
-                case organisationList.ADK: // АДК СЦБ ЮгПа
-                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADK.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин С.А.Панову", Aut_Ch[3]);
-                    paragraphPos = 18;
-                    fileOpen.Visible = false;
-                    wordDocument.Activate();
-                    listOfChage(ref fileOpen, ref Aut_Ch);
-                    break;
                 case organisationList.YugRkp: // ДЦ Юг с Ркп
-                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugKrug.doc", ReadOnly: false);
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин Л.П.Кузнецову", Aut_Ch[3]);
-                    paragraphPos = 19;
+                    paragraphPos = 17;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.YugKrug: // ДЦ ЮГ Круг
-                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugKrug.doc", ReadOnly: false);
                     fName = MakeFileName("М.А. Еремин В.В. Аракельяну", Aut_Ch[3]);
-                    paragraphPos = 18;
+                    paragraphPos = 19;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.Textrans: // ДЦ Тракт - "Техтрнас"
+                    wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
+                    fName = MakeFileName("М.А.Ерёмин А.С.Павлову", Aut_Ch[3]);
+                    paragraphPos = 20;
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    listOfChage(ref fileOpen, ref Aut_Ch);
+                    break;
+                case organisationList.Table: // просто таблица
+                    object missing = System.Reflection.Missing.Value;
+                    wordDocument = fileOpen.Documents.Add(ref missing, ref missing, ref missing, ref missing);
+                    fName = "\\таблица.doc";
+                    fileOpen.Visible = false;
+                    wordDocument.Activate();
+                    wordDocument.PageSetup.LeftMargin = (float)50;
+                    wordDocument.PageSetup.TopMargin = (float)50;
                     break;
             }
 
@@ -262,7 +312,7 @@ namespace Letter_Maker
             int rowNumber = startPosition; 
             foreach (FileInfo fl in dir.GetFiles())
             {
-                tbl.Rows[rowNumber].Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                tbl.Rows[rowNumber+1].Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 tbl.Cell(rowNumber+1, 1).Range.Text = rowNumber.ToString();
                 tbl.Cell(rowNumber+1, 2).Range.Text = GiveFileDiscription(fl.Name);
                 tbl.Cell(rowNumber+1, 3).Range.Text = fl.Name;

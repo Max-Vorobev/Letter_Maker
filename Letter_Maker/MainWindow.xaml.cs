@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Windows;
 using System.Xml.Serialization;
 using Letter_Maker.Organisations;
-using static System.Net.Mime.MediaTypeNames;
 using WinForms = System.Windows.Forms;
 
 
@@ -45,11 +42,14 @@ namespace Letter_Maker
             }
 
             List<string> listRailRoad = new List<string> { "Горьковской", "Забайкальской", "Московской", "Октябрьской", "Приволжской", "Северной", "Северо-Кавказской" };
+            List<string> systemChoise = new List<string> { "Нету","АБТЦ-МШ", "УРЦК"};
 
             Author_Choise.ItemsSource = author.spis.Keys.Select(key => key.Split(' ').First());
             Author_Choise.SelectedIndex = startPosition;
             RailRoad_Choise.ItemsSource = listRailRoad;
             RailRoad_Choise.SelectedIndex = startPosition;
+            System_Choise.ItemsSource = systemChoise;
+            System_Choise.SelectedIndex = startPosition;
         }
 
         /// Метод, в котором вызывается диалоговое окно для выбора папки, где лежат файлы
@@ -78,9 +78,10 @@ namespace Letter_Maker
             {
                 DocKit kit = new DocKit(Folder_choice(),
                                         new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                        RailRoad_Choise.SelectedItem.ToString(),
-                                                        Station_Name.Text});
+                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                            RailRoad_Choise.SelectedItem.ToString(),
+                                                            Station_Name.Text,
+                                                            System_Choise.SelectedItem.ToString()});
             }
         }
 
@@ -110,12 +111,24 @@ namespace Letter_Maker
                                                                         Station_Name.Text});
             }
         }
-        private void adk_table_Click(object sender, RoutedEventArgs e)
+        private void adk_scb_table_Click(object sender, RoutedEventArgs e)
         {
             if (WindowOfEmptiness(Station_Name.Text))
             {
-                DocADK adk = new DocADK(Folder_choice(),
-                                    new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                DocADKSCB adk = new DocADKSCB(Folder_choice(),
+                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                        RailRoad_Choise.SelectedItem.ToString(),
+                                                        Station_Name.Text});
+            }
+        }
+
+        private void asdk_table_Click (object sender, RoutedEventArgs e)
+        {
+            if (WindowOfEmptiness(Station_Name.Text))
+            {
+                DocADKSCB adk = new DocADKSCB(Folder_choice(),
+                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                         author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                         RailRoad_Choise.SelectedItem.ToString(),
                                                         Station_Name.Text});

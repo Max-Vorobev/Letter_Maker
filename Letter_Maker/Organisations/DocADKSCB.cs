@@ -6,15 +6,15 @@ using WinForms = System.Windows.Forms;
 
 namespace Letter_Maker.Organisations
 {
-    class DocADK : Document
+    internal class DocADKSCB : Document
     {
-        internal DocADK(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice)
+        internal DocADKSCB(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice)
         {
             if (folderBrowserDialog.ShowDialog() == WinForms.DialogResult.OK)
             {
                 if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(   folderBrowserDialog.SelectedPath,
-                                    organisationList.ADK,
+                                    organisationList.ADKSCB,
                                     ref choice);
             }
         }
@@ -23,16 +23,22 @@ namespace Letter_Maker.Organisations
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listADK = new List<string>() {     "Мнемосхема каналов УСО",
-                                                            "Мнемосхема шкафа УВК",
+            List<string> listADK = new List<string>() {     
+                                                            //xls
                                                             "Список изменений сигналов состояния напольных устройств",
                                                             "Список сигналов состояния напольных объектов",
-                                                            "Мнемосхема перегона",
-                                                            "Мнемосхема станции",
+                                                            //xml
                                                             "Список сигналов состояния напольных устройств",
-                                                            "Список сигналов состояния устройств КСУ",
+                                                            "Список сигналов состояния устройств УВК РА",
                                                             "Список сигналов состояния устройств УСО",
-                                                            "Список сигналов состояния устройств УВК РА"};
+                                                            "Список сигналов состояния устройств КСУ",
+                                                            //jpg,png
+                                                            "Штамп",
+                                                            "Мнемосхема станции",
+                                                            "Мнемосхема перегона",
+                                                            "Мнемосхема шкафа УВК",
+                                                            "Мнемосхема каналов УСО"   
+                                                      };
 
             foreach (FileInfo fl in dir.GetFiles())
             {
@@ -68,22 +74,28 @@ namespace Letter_Maker.Organisations
                         break;
                     case ".jpg":
                     case ".png":
-                        if (fl.Name.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
+                        if (fl.Name.Contains("Штамп", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Мнемосхема перегона");
+                            listFiles.Add("Штамп");
                         }
                         else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема станции");
                         }
-                        else if (fl.Name.Contains("Uso", StringComparison.OrdinalIgnoreCase))
+                        else if (fl.Name.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Мнемосхема каналов УСО");
+                            listFiles.Add("Мнемосхема перегона");
                         }
-                        else if (fl.Name.Contains("Uvk", StringComparison.OrdinalIgnoreCase))
+                        else if (fl.Name.Contains("Uvk", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("УВК", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема шкафа УВК");
                         }
+                        else if (fl.Name.Contains("Uso", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("УСО", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Мнемосхема каналов УСО");
+                        }
+                        break;
+                    default: 
                         break;
                 }
             }

@@ -6,44 +6,39 @@ using WinForms = System.Windows.Forms;
 
 namespace Letter_Maker.Organisations
 {
-    internal class DocKit : Document
+    internal class DocASDK : Document
     {
-        internal DocKit(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice )
+        internal DocASDK(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice)
         {
             if (folderBrowserDialog.ShowDialog() == WinForms.DialogResult.OK)
             {
-                if (Check(folderBrowserDialog.SelectedPath, choice[4]))
+                if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(folderBrowserDialog.SelectedPath,
-                                    organisationList.Kit,
+                                    organisationList.ADKSCB,
                                     ref choice);
             }
         }
-        
-        private bool Check(string selectedPath, string system)
+
+        private bool Check(string selectedPath)
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listKit = new List<string>() {
-                                                        //xls
-                                                        "Список изменений сигналов состояния напольных устройств",
-                                                        "Список сигналов состояния напольных объектов",
-                                                        //xml
-                                                        "Список сигналов состояния напольных устройств",
-                                                        "Список сигналов состояния устройств УВК РА",
-                                                        "Список сигналов состояния устройств УСО",
-                                                        "Список сигналов состояния устройств КСУ",
-                                                        //jpg,png
-                                                        "Штамп",
-                                                        "Мнемосхема станции",
-                                                        "Мнемосхема перегона",
-                                                        "Мнемосхема каналов УСО",
-                                                        "Мнемосхема шкафа УВК"
-                                                  };
-
-            if (system == "АБТЦ-МШ")
-                listKit.Add("Список сигналов состояния устройств АБТЦ-МШ");
-            else if (system == "УРЦК")
-                listKit.AddRange(new List<string>() { "Мнемосхемы шкафов УРЦК", "Диагностика связей УРЦК", "Диагностическая информация УРЦК" });
+            List<string> listASDK = new List<string>() {     
+                                                            //xls
+                                                            "Список изменений сигналов состояния напольных устройств",
+                                                            "Список сигналов состояния напольных объектов",
+                                                            //xml
+                                                            "Список сигналов состояния напольных устройств",
+                                                            "Список сигналов состояния устройств УВК РА",
+                                                            "Список сигналов состояния устройств УСО",
+                                                            "Список сигналов состояния устройств КСУ",
+                                                            //jpg,png
+                                                            "Штамп",
+                                                            "Мнемосхема станции",
+                                                            "Мнемосхема перегона",
+                                                            "Мнемосхема шкафа УВК",
+                                                            "Мнемосхема каналов УСО"
+                                                      };
 
             foreach (FileInfo fl in dir.GetFiles())
             {
@@ -76,19 +71,6 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Список сигналов состояния устройств КСУ");
                         }
-                        else if (fl.Name.Contains("urckUvkBrief-data", StringComparison.OrdinalIgnoreCase))
-                        {
-                            listFiles.Add("Диагностика связей УРЦК");
-                        }
-                        else if (fl.Name.Contains("urckProcessed-data", StringComparison.OrdinalIgnoreCase))
-                        {
-                            listFiles.Add("Диагностическая информация УРЦК");
-                        }
-                        else if (fl.Name.Contains("abtcmshDiag-data_dk", StringComparison.OrdinalIgnoreCase))
-                        {
-                            listFiles.Add("Список сигналов состояния устройств АБТЦ-МШ");
-                        }
-                        
                         break;
                     case ".jpg":
                     case ".png":
@@ -96,7 +78,7 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Штамп");
                         }
-                        else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Станции", StringComparison.OrdinalIgnoreCase))
+                        else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема станции");
                         }
@@ -112,16 +94,12 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Мнемосхема каналов УСО");
                         }
-                        else if ( fl.Name.Contains("УРЦК", StringComparison.OrdinalIgnoreCase))
-                        {
-                            listFiles.Add("Мнемосхемы шкафов УРЦК");
-                        }
                         break;
-                    default: 
+                    default:
                         break;
                 }
             }
-            listFiles = listKit.Except(listFiles.Distinct().ToList()).ToList();
+            listFiles = listASDK.Except(listFiles.Distinct().ToList()).ToList();
             if (listFiles.Count > 0)
                 return WindowOfClarify(listFiles);
             else

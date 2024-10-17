@@ -7,7 +7,7 @@ using WinForms = System.Windows.Forms;
 
 namespace Letter_Maker.Organisations
 {
-    class DocTextrans : Document
+    internal class DocTextrans : Document
     {
         internal DocTextrans(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice)
         {
@@ -24,11 +24,16 @@ namespace Letter_Maker.Organisations
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listTextr = new List<string>() {   "Список изменений сигналов состояния напольных устройств",
-                                                            "Мнемосхема перегона",
+            List<string> listTextr = new List<string>() {   
+                                                            //xls
+                                                            "Список изменений сигналов состояния напольных устройств",
+                                                            //xlsx
+                                                            "Таблица ТС (ТУ и ОТУ)",
+                                                            //jpg,png
+                                                            "Штамп",
                                                             "Мнемосхема станции",
-                                                            "Таблицы сигналов ТС, команд ТУ и ОТУ", //signal list
-                                                            };
+                                                            "Мнемосхема перегона"
+                                                        };
 
             foreach (FileInfo fl in dir.GetFiles())
             {
@@ -39,23 +44,29 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Список изменений сигналов состояния напольных устройств");
                         }
+                    break;
+                    case ".xlsx":
+                        if (fl.Name.Contains("Таблица ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Таблица ТС (ТУ и ОТУ)");
+                        }
                         break;
                     case ".jpg":
                     case ".png":
-                        if (fl.Name.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
+                        if (fl.Name.Contains("Штамп", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Мнемосхема перегона");
+                            listFiles.Add("Штамп");
                         }
                         else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Станция", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема станции");
                         }
-                        break;
-                    case ".xlsx":
-                        if (fl.Name.Contains("signallist", StringComparison.OrdinalIgnoreCase))
+                        else if (fl.Name.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Таблицы сигналов ТС, команд ТУ и ОТУ");
-                        }
+                            listFiles.Add("Мнемосхема перегона");
+                        }                        
+                        break;
+                    default:
                         break;
                 }
             }

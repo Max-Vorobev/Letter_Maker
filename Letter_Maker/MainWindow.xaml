@@ -7,10 +7,11 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" 
         Title="Главная" Height="290" Width="465" Background="White" ResizeMode="NoResize">
-   
 
 
+    <Border BorderBrush="Black" BorderThickness="1">
     <Grid>
+       
         <Grid.RowDefinitions>
             <RowDefinition ></RowDefinition>
             <RowDefinition ></RowDefinition>
@@ -25,20 +26,27 @@
         </Grid.ColumnDefinitions>
 
         <!--для клавишь-->
-        <Button x:Name="only_table" Content="Только таблица" Click="only_table_Click" Grid.Row="0" Grid.Column="0"/>
-        <Button x:Name="kit_table" Content="ООО КИТ" Click="kit_table_Click" Grid.Row="0" Grid.Column="1" />
-        <Button x:Name="ADK_SCB_table" Content="АДК СЦБ"  Click="adk_table_Click" Grid.Row="0" Grid.Column="2" />
-        <Button x:Name="setun_table" Content="Сетунь" Click="setun_table_Click" Grid.Row="1" Grid.Column="0" />
-        <Button x:Name="Yug_Rkp_table" Content="ЮГ РКП" Click="yug_rkp_table_Click" Grid.Row="1" Grid.Column="1" />
-        <Button x:Name="Yug_Krug_table" Content="ЮГ КРУГ" Click="yug_krug_table_Click" Grid.Row="1" Grid.Column="2"/>
-        <Button x:Name="tex_tranc_table" Content="Техтранс" Click="tex_tranc_table_Click" Grid.Row="2" Grid.Column="0"/>
+        <Button x:Name="kit_table" Content="ООО КИТ" Click="kit_table_Click" Grid.Row="0" Grid.Column="0"  BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="ADK_SCB_table" Content="АДК СЦБ" Click="adk_scb_table_Click" Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="ASDK_table" Content="АСДК" Click="asdk_table_Click" Grid.Row="0" Grid.Column="2" BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="setun_table" Content="Сетунь" Click="setun_table_Click" Grid.Row="1" Grid.Column="0"  BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="Yug_Rkp_table" Content="ЮГ РКП" Click="yug_rkp_table_Click" Grid.Row="1" Grid.Column="1"  BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="Yug_Krug_table" Content="ЮГ КРУГ" Click="yug_krug_table_Click" Grid.Row="1" Grid.Column="2"  BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="tex_tranc_table" Content="Техтранс" Click="tex_tranc_table_Click" Grid.Row="2" Grid.Column="0"  BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="only_table" Content="Только таблица" Click="only_table_Click" Grid.Row="2" Grid.Column="1"  BorderBrush="Black" BorderThickness="1"/>
 
-        <!--для списка авторов-->
-        <ComboBox x:Name="Author_Choise" Grid.Row="2" Grid.Column="1" />
-        <ComboBox x:Name="RailRoad_Choise" Grid.Row="2" Grid.Column="2" />
+        <!--для выбора автора и жд-->
+       <Label  Content="Автор" Grid.Row="2" Grid.Column="2" HorizontalContentAlignment="Center" Padding="0,-5,0,0"
+                    BorderBrush="Black" BorderThickness="1"/>
+       <ComboBox x:Name="Author_Choise" Grid.Row="2" Grid.Column="2" Margin="1,20,1,1" />
+       
+        <Label  Content="Ж/Д" Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Center" Padding="0,-5,0,0"
+                    BorderBrush="Black" BorderThickness="1"/>
+       <ComboBox x:Name="RailRoad_Choise" Grid.Row="3" Grid.Column="2" Margin="1,20,1,1" />
         
-        <!--Для названия станции-->
-        <TextBox x:Name="Station_Name" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+        
+            <!--Для названия станции-->
+        <TextBox x:Name="Station_Name" Grid.Row="3" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
             <TextBox.Style>
                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
                     <Setter Property="Template">
@@ -47,7 +55,7 @@
                                 <Grid>
                                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
                                     <ScrollViewer x:Name="PART_ContentHost" Focusable="false"/>
-                                    <TextBlock x:Name="PlaceholderText" Text="Введите название станции" Foreground="Gray" Margin="5,0,0,0"
+                                    <TextBlock x:Name="PlaceholderText" Text="Введите название станции" Foreground="Gray" Margin="1,0,0,0"
                                        Visibility="Collapsed" IsHitTestVisible="False"/>
                                 </Grid>
                                 <ControlTemplate.Triggers>
@@ -66,6 +74,10 @@
             </TextBox.Style>
         </TextBox>
 
-    </Grid>
-    
+        
+            <Label  Content="Система" Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Padding="0,-5,0,0"
+                    BorderBrush="Black" BorderThickness="1"/>
+            <ComboBox x:Name="System_Choise" Grid.Row="3" Grid.Column="1" Margin="1,20,1,1"  />
+        </Grid>
+    </Border>
 </Window>

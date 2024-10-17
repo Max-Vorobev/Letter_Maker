@@ -23,18 +23,29 @@ namespace Letter_Maker.Organisations
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
-            List<string> listYugKrug = new List<string>() {   "Список изменений сигналов состояния напольных устройств",
-                                                            "Список сигналов состояния напольных устройств",
+            List<string> listYugKrug = new List<string>() { 
+                                                            //csv
                                                             "Список групп сигналов состояния напольных устройств",
-                                                            "Мнемосхема перегона",
+                                                            //xls
+                                                            "Список изменений сигналов состояния напольных устройств",
+                                                            "Список сигналов состояния напольных устройств",
+                                                            //xlsx
+                                                            "Таблица команд ТУ или ТУ и ОТУ",
+                                                            //jpg
+                                                            "Штамп",
                                                             "Мнемосхема станции",
-                                                            "Таблица команд ТУ",// xlsx по названию ТУ/ОТУ
-                                                            "Таблица команд ТУ/ОТУ"};// или
-
+                                                            "Мнемосхема перегона"
+                                                          };
             foreach (FileInfo fl in dir.GetFiles())
             {
                 switch (fl.Extension)
                 {
+                    case ".csv":
+                        if (fl.Name.Contains("GroupSignalList", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Список групп сигналов состояния напольных устройств");
+                        }
+                        break;
                     case ".xls":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
@@ -45,33 +56,28 @@ namespace Letter_Maker.Organisations
                             listFiles.Add("Список сигналов состояния напольных устройств");
                         }
                         break;
-                    case ".csv":
-                        if (fl.Name.Contains("GroupSignalList", StringComparison.OrdinalIgnoreCase))
+                    case ".xlsx":
+                        if (fl.Name.Contains("ТУ", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Список групп сигналов состояния напольных устройств");
+                            listFiles.Add("Таблица команд ТУ или ТУ и ОТУ");
                         }
                         break;
-
                     case ".jpg":
                     case ".png":
-                        if (fl.Name.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
+                        if (fl.Name.Contains("Штамп", StringComparison.OrdinalIgnoreCase))
                         {
-                            listFiles.Add("Мнемосхема перегона");
+                            listFiles.Add("Штамп");
                         }
                         else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Станция", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема станции");
                         }
-                        break;
-                    case ".xlsx":
-                        if (fl.Name.Contains("Таблица команд ТУ", StringComparison.OrdinalIgnoreCase))
+                        else if(fl.Name.Contains("Stages", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("Перегон", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (fl.Name.Contains("ОТУ", StringComparison.OrdinalIgnoreCase))
-                            {
-                                listFiles.Add("Таблица команд ТУ/ОТУ");
-                            }
-                            listFiles.Add("Таблица команд ТУ");
+                            listFiles.Add("Мнемосхема перегона");
                         }
+                        break;
+                    default:
                         break;
                 }
             }
