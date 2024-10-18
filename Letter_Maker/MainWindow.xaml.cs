@@ -42,7 +42,7 @@ namespace Letter_Maker
             }
 
             List<string> listRailRoad = new List<string> { "Горьковской", "Забайкальской", "Московской", "Октябрьской", "Приволжской", "Северной", "Северо-Кавказской" };
-            List<string> systemChoise = new List<string> { "Нету","АБТЦ-МШ", "УРЦК"};
+            List<string> systemChoise = new List<string> { "Отсутствует","АБТЦ-МШ", "УРЦК"};
 
             Author_Choise.ItemsSource = author.spis.Keys.Select(key => key.Split(' ').First());
             Author_Choise.SelectedIndex = startPosition;
@@ -127,7 +127,7 @@ namespace Letter_Maker
         {
             if (WindowOfEmptiness(Station_Name.Text))
             {
-                DocADKSCB adk = new DocADKSCB(Folder_choice(),
+                DocASDK adk = new DocASDK(Folder_choice(),
                                         new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                         author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                         RailRoad_Choise.SelectedItem.ToString(),

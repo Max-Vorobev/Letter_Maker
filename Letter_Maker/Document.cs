@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using Word = Microsoft.Office.Interop.Word;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Letter_Maker
 {
@@ -27,7 +28,8 @@ namespace Letter_Maker
         }
 
         /// private методы 
-        
+
+
         // Метод для замены текста в документе
         private void FindAndReplace(Word.Application fileOpen, object findText, object replaceWithText)
         {
@@ -203,9 +205,13 @@ namespace Letter_Maker
                 return "-";
         }
 
-        
-        
-        
+        /// Метод для формирования имени итогового документа
+        private string MakeFileName(string aliceBob, string stationChoice)
+        {
+            return $"\\{DateTime.Now.ToString("yyyy.MM.dd")} {aliceBob} - Материалы для адаптации ПО ст." + stationChoice + ".doc";
+        }
+
+
         /// public методы 
 
         /// <summary>
@@ -244,7 +250,7 @@ namespace Letter_Maker
                 case organisationList.ASDK: // АСДК
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ASDK.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.А.Аверкиеву", Aut_Ch[3]);
-                    paragraphPos = 16;
+                    paragraphPos = 18;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
@@ -342,14 +348,7 @@ namespace Letter_Maker
                                                 MessageBoxImage.Warning);
             return result == MessageBoxResult.Yes;
         }
-
-        /// Метод для формирования имени итогового документа
-        private string MakeFileName(string aliceBob, string stationChoice)
-        {
-            return $"\\{DateTime.Now.ToString("yyyy.MM.dd")} {aliceBob} - Материалы для адаптации ПО ст." + stationChoice + ".doc";
-        }
-
-        
+       
 
         public bool CheckFileList (string selectedPath, List<string> listOfFiles)
         {

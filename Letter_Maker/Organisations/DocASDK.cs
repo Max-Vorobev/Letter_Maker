@@ -14,7 +14,7 @@ namespace Letter_Maker.Organisations
             {
                 if (Check(folderBrowserDialog.SelectedPath))
                     MakeDocument(folderBrowserDialog.SelectedPath,
-                                    organisationList.ADKSCB,
+                                    organisationList.ASDK,
                                     ref choice);
             }
         }
