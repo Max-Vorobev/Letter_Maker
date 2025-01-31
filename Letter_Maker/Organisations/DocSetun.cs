@@ -44,7 +44,7 @@ namespace Letter_Maker.Organisations
 
             foreach (FileInfo fl in dir.GetFiles())
             {
-                switch (fl.Extension)
+                switch (fl.Extension.ToLower())
                 {
                     case ".csv":
                         if (fl.Name.Contains("GroupSignalList", StringComparison.OrdinalIgnoreCase))
@@ -74,7 +74,7 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Штамп");
                         }
-                        else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("станции", StringComparison.OrdinalIgnoreCase))
+                        else if (fl.Name.Contains("Station", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("станци", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема станции");
                         }

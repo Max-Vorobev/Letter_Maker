@@ -29,7 +29,21 @@ namespace Letter_Maker
 
         /// private методы 
 
+        private static int FindParagraphWithTag(Word.Document document, string tag)
+        {
+            int nLevel = 0;
+            foreach (Paragraph paragraph in document.Paragraphs)
+            {
+                Word.Range parRng = paragraph.Range;
+                string sText = parRng.Text.TrimEnd('\r');
+                nLevel++;
+                if (sText == tag)
+                    return nLevel;
+            }
+            
 
+            return 1;
+        }
         // Метод для замены текста в документе
         private void FindAndReplace(Word.Application fileOpen, object findText, object replaceWithText)
         {
@@ -44,9 +58,7 @@ namespace Letter_Maker
             object replace = 2;
             object wrap = 1;
 
-            // Добавляем форматирование подчеркивания к замененному тексту
-            fileOpen.Selection.Font.Underline = WdUnderline.wdUnderlineSingle;
-
+            
             // Заменяем и добавляем форматирование подчеркивания
             fileOpen.Selection.Find.Execute(ref findText, ref matchCase, ref matchWholeWord,
                 ref matchWildCards, ref matchSoundsLike, ref matchAllWordForms, ref forward, ref wrap, ref format, ref replaceWithText, ref replace);
@@ -82,22 +94,8 @@ namespace Letter_Maker
             FindAndReplace(fl, "<author>", choise[0]);
             FindAndReplace(fl, "<phone>", choise[1]);
             FindAndReplace(fl, "<rr>", choise[2]);
-            
-            // В случае, если станция на октяборьской - нужно дублировать ФА для Капусты
-            if (choise[2] == "Октябрьской")
-            {
-                FindAndReplace(fl, "<okt>", "КОПИЯ:\vСлужба Ш Октябрьской\vдирекции инфраструктуры, \vНачальнику отдела развития и перспективных технологий \vП. А. Капусте\v");
-                FindAndReplace(fl, "<okt_mail>", "sh_kapusta@orw.rzd.ru, pele1968@mail.ru");
-                FindAndReplace(fl, "<cm>", ",");
-                FindAndReplace(fl, "<dt>", ".");
-            }
-            else
-            {
-                FindAndReplace(fl, "<okt>", "");
-                FindAndReplace(fl, "<okt_mail>", "");
-                FindAndReplace(fl, "<cm>", ".");
-                FindAndReplace(fl, "<dt>", "");
-            }
+            FindAndReplace(fl, "<okt>", "");
+            FindAndReplace(fl, "<okt_mail>", ".");
             FindAndReplace(fl, "<station>", choise[3]);
         }
 
@@ -173,12 +171,12 @@ namespace Letter_Maker
                 }
                 else
                     return "-";
-            else if (fName.Contains(".jpg") || fName.Contains(".png"))
+            else if (fName.Contains(".jpg", StringComparison.OrdinalIgnoreCase) || fName.Contains(".png", StringComparison.OrdinalIgnoreCase))
                 if (fName.Contains("Штамп", StringComparison.OrdinalIgnoreCase))
                 {
                     return "Штамп схематического плана";
                 }
-                else if ((fName.Contains("Station", StringComparison.OrdinalIgnoreCase)) || (fName.Contains("Станции", StringComparison.OrdinalIgnoreCase)))
+                else if ((fName.Contains("Station", StringComparison.OrdinalIgnoreCase)) || (fName.Contains("Станци", StringComparison.OrdinalIgnoreCase)))
                 {
                     return "Мнемосхема станции";
                 }
@@ -234,7 +232,6 @@ namespace Letter_Maker
                 case organisationList.Kit: // АПК ДК КИТ
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.Э.Усачеву", Aut_Ch[3]);
-                    paragraphPos = 19;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen,ref Aut_Ch);
@@ -242,7 +239,6 @@ namespace Letter_Maker
                 case organisationList.ADKSCB: // АДК СЦБ ЮгПа
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADKSCB.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.А.Панову", Aut_Ch[3]);
-                    paragraphPos = 18;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
@@ -250,7 +246,6 @@ namespace Letter_Maker
                 case organisationList.ASDK: // АСДК
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ASDK.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин С.А.Аверкиеву", Aut_Ch[3]);
-                    paragraphPos = 18;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
@@ -258,15 +253,23 @@ namespace Letter_Maker
                 case organisationList.Setun:// Сетунь
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Setun.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин П.В.Бармину", Aut_Ch[3]);
-                    paragraphPos = 19;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
+                    if (Aut_Ch[2] == "Приволжской")
+                    {
+                        FindAndReplace(fileOpen, "<okt>", "КОПИЯ:\vГлавному инженеру службы\vавтоматики и телемеханики\vПриволжской дирекции\vинфраструктуры\vЛ. В. Шулятьеву\v");
+                        FindAndReplace(fileOpen, "<okt_mail>", ", Sh_shulyatevLV@pvrr.rzd.ru, shch6_kaurovam@pvrr.rzd.ru.");
+                    }
+                    else if (Aut_Ch[2] == "Октябрьской")
+                    {
+                        FindAndReplace(fileOpen, "<okt>", "КОПИЯ:\vСлужба Ш Октябрьской\vдирекции инфраструктуры, \vНачальнику отдела развития и перспективных технологий \vП. А. Капусте\v");
+                        FindAndReplace(fileOpen, "<okt_mail>", ", sh_kapusta@orw.rzd.ru, pele1968@mail.ru.");
+                    }
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.YugRkp: // ДЦ Юг с Ркп
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Еремин Л.П.Кузнецову", Aut_Ch[3]);
-                    paragraphPos = 17;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
@@ -274,7 +277,6 @@ namespace Letter_Maker
                 case organisationList.YugKrug: // ДЦ ЮГ Круг
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugKrug.doc", ReadOnly: false);
                     fName = MakeFileName("М.А. Еремин В.В. Аракельяну", Aut_Ch[3]);
-                    paragraphPos = 19;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
@@ -282,9 +284,13 @@ namespace Letter_Maker
                 case organisationList.Textrans: // ДЦ Тракт - "Техтрнас"
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
                     fName = MakeFileName("М.А.Ерёмин А.С.Павлову", Aut_Ch[3]);
-                    paragraphPos = 20;
                     fileOpen.Visible = false;
                     wordDocument.Activate();
+                    if (Aut_Ch[2] == "Октябрьской")
+                    {
+                        FindAndReplace(fileOpen, "<okt>", "КОПИЯ:\vСлужба Ш Октябрьской\vдирекции инфраструктуры, \vНачальнику отдела развития и перспективных технологий \vП. А. Капусте\v");
+                        FindAndReplace(fileOpen, "<okt_mail>", ", sh_kapusta@orw.rzd.ru, pele1968@mail.ru.");
+                    }
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.Table: // просто таблица
@@ -296,13 +302,15 @@ namespace Letter_Maker
                     wordDocument.PageSetup.LeftMargin = (float)50;
                     wordDocument.PageSetup.TopMargin = (float)50;
                     break;
+                default:
+                    var result = System.Windows.MessageBox.Show("Случилось страшное");
+                    break;
             }
 
             
             DirectoryInfo dir = new DirectoryInfo(theWay);
             int kolich = dir.GetFiles().Length;
-
-            Word.Range wordrange = wordDocument.Paragraphs[paragraphPos].Range;
+            Word.Range wordrange = wordDocument.Paragraphs[FindParagraphWithTag(wordDocument,"<table>")].Range;
             Object defaultTableBehavior = WdDefaultTableBehavior.wdWord9TableBehavior;
             Object autoFitBehavior = WdAutoFitBehavior.wdAutoFitWindow;
 

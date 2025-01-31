@@ -14,39 +14,50 @@ namespace Letter_Maker
     public partial class MainWindow : System.Windows.Window
     {
         Author author = new Author();
+        rrList rrSpis = new rrList();
 
         public MainWindow()
         {
             InitializeComponent();
             int startPosition = 0;
+            XmlSerializer formatter = new XmlSerializer(typeof(ListModel));
 
-            XmlSerializer formatter = new XmlSerializer(typeof(Author[]));
-
-            using (FileStream fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\0_Authors.xml", FileMode.OpenOrCreate))
+            try
             {
-                Author[]? newpeople = formatter.Deserialize(fs) as Author[];
-
-                if (newpeople != null)
+                using (FileStream fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\0_Authors.xml", FileMode.Open))
                 {
-                    foreach (Author person in newpeople)
+                    ListModel listModel = (ListModel)formatter.Deserialize(fs);
+
+                    if (listModel != null)
                     {
-                        author.spis.Add(person.authorName, person.phNumber);
+                        foreach (Author person in listModel.Authors)
+                        {
+                            author.spisAuthor.Add(person.Name, person.PhoneNumber);
+                        }
+                        
+
+                        foreach (string org in listModel.rrLst)
+                        {
+                            rrSpis.spisRR.Add(org);
+                        }
                     }
-                    author.Sort();
+                    else
+                    {
+                        MessageBox.Show("Нет списка авторов");
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("Нет списка авторов");
-                }
-
             }
-
-            List<string> listRailRoad = new List<string> { "Горьковской", "Забайкальской", "Московской", "Октябрьской", "Приволжской", "Северной", "Северо-Кавказской" };
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка десериализации: {ex.Message}");
+            }
+            rrSpis.spisRR.Sort();
+            
             List<string> systemChoise = new List<string> { "Отсутствует","АБТЦ-МШ", "УРЦК"};
 
-            Author_Choise.ItemsSource = author.spis.Keys.Select(key => key.Split(' ').First());
+            Author_Choise.ItemsSource = author.spisAuthor.Keys.Select(key => key.Split(' ').First());
             Author_Choise.SelectedIndex = startPosition;
-            RailRoad_Choise.ItemsSource = listRailRoad;
+            RailRoad_Choise.ItemsSource = rrSpis.spisRR;
             RailRoad_Choise.SelectedIndex = startPosition;
             System_Choise.ItemsSource = systemChoise;
             System_Choise.SelectedIndex = startPosition;
@@ -77,8 +88,8 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocKit kit = new DocKit(Folder_choice(),
-                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                             RailRoad_Choise.SelectedItem.ToString(),
                                                             Station_Name.Text,
                                                             System_Choise.SelectedItem.ToString()});
@@ -92,8 +103,8 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocSetun setun = new DocSetun(Folder_choice(),
-                                            new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                                author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                            new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                                author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                                 RailRoad_Choise.SelectedItem.ToString(),
                                                                 Station_Name.Text});
             }
@@ -105,8 +116,8 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocTextrans textrans = new DocTextrans(Folder_choice(),
-                                                    new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                    new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                                        author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                                         RailRoad_Choise.SelectedItem.ToString(),
                                                                         Station_Name.Text});
             }
@@ -116,10 +127,10 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocADKSCB adk = new DocADKSCB(Folder_choice(),
-                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                        RailRoad_Choise.SelectedItem.ToString(),
-                                                        Station_Name.Text});
+                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                            RailRoad_Choise.SelectedItem.ToString(),
+                                                            Station_Name.Text});
             }
         }
 
@@ -128,10 +139,10 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocASDK adk = new DocASDK(Folder_choice(),
-                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                        author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                        RailRoad_Choise.SelectedItem.ToString(),
-                                                        Station_Name.Text});
+                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                                            RailRoad_Choise.SelectedItem.ToString(),
+                                                            Station_Name.Text});
             }
         }
 
@@ -140,8 +151,8 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocYugRkp yugRkp = new DocYugRkp(Folder_choice(),
-                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                             RailRoad_Choise.SelectedItem.ToString(),
                                                             Station_Name.Text});
             }
@@ -152,8 +163,8 @@ namespace Letter_Maker
             if (WindowOfEmptiness(Station_Name.Text))
             {
                 DocYugKrug yugKrug = new DocYugKrug(Folder_choice(),
-                                        new List<string> {  author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                            author.spis.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                             RailRoad_Choise.SelectedItem.ToString(),
                                                             Station_Name.Text});
             }
