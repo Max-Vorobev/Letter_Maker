@@ -231,7 +231,7 @@ namespace Letter_Maker
             {
                 case organisationList.Kit: // АПК ДК КИТ
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин С.Э.Усачеву", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Еремин А.А.Иванову", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen,ref Aut_Ch);

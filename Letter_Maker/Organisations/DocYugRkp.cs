@@ -49,6 +49,7 @@ namespace Letter_Maker.Organisations
                         }
                         break;
                     case ".xls":
+                    case ".xlsx":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Список изменений сигналов состояния напольных устройств");
@@ -57,8 +58,6 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Список сигналов состояния напольных устройств");
                         }
-                        break;
-                    case ".xlsx":
                         if (fl.Name.Contains("ТУ", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Таблица команд ТУ или ТУ и ОТУ");

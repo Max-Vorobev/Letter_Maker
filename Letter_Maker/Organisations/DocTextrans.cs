@@ -40,15 +40,14 @@ namespace Letter_Maker.Organisations
                 switch (fl.Extension.ToLower())
                 {
                     case ".xls":
-                        if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
-                        {
-                            listFiles.Add("Список изменений сигналов состояния напольных устройств");
-                        }
-                    break;
                     case ".xlsx":
                         if (fl.Name.Contains("Таблица ", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Таблица ТС (ТУ и ОТУ)");
+                        }
+                        if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Список изменений сигналов состояния напольных устройств");
                         }
                         break;
                     case ".jpg":

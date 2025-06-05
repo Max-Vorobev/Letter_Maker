@@ -50,6 +50,7 @@ namespace Letter_Maker.Organisations
                 switch (fl.Extension.ToLower())
                 {
                     case ".xls":
+                    case ".xlsx":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Список изменений сигналов состояния напольных устройств");

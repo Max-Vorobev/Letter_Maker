@@ -24,7 +24,7 @@ namespace Letter_Maker.Organisations
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
             List<string> listASDK = new List<string>() {     
-                                                            //xls
+                                                            //xls и xlsx
                                                             "Список изменений сигналов состояния напольных устройств",
                                                             "Список сигналов состояния напольных объектов",
                                                             //xml
@@ -45,6 +45,7 @@ namespace Letter_Maker.Organisations
                 switch (fl.Extension.ToLower())
                 {
                     case ".xls":
+                    case ".xlsx":
                         if (fl.Name.Contains("ChangeList", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Список изменений сигналов состояния напольных устройств");
