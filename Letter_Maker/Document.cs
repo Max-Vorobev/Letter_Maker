@@ -325,59 +325,47 @@ namespace Letter_Maker
             /// Вызов метода для формирования заголовка таблицы
             Zagalovok(tbl);
 
-            int rowNumber = startPosition; 
+            
+            Dictionary<string, List<FileInfo>> discrFileTable = new Dictionary<string, List<FileInfo>>();
             foreach (FileInfo fl in dir.GetFiles())
             {
-                tbl.Rows[rowNumber+1].Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                //tbl.Cell(rowNumber+1, 1).Range.Text = rowNumber.ToString();
-                tbl.Cell(rowNumber+1, 2).Range.Text = GiveFileDiscription(fl.Name);
-                tbl.Cell(rowNumber+1, 3).Range.Text = fl.Name;
-                tbl.Cell(rowNumber+1, 4).Range.Text = fl.Length.ToString("N0");
-                tbl.Cell(rowNumber+1, 5).Range.Text = fl.CreationTime.ToString("g");
-                rowNumber++;      
-            }
-            
-            
-            tbl.Sort(true,
-                     2,
-                     WdSortFieldType.wdSortFieldAlphanumeric,
-                     WdSortOrder.wdSortOrderAscending);
-            
-            int cnt = 2;
-            Column column = tbl.Columns[2];
-            while (cnt <= column.Cells.Count)
-            {
-                if (column.Cells[cnt].Range.Text == column.Cells[cnt - 1].Range.Text)
+                string fInf = GiveFileDiscription(fl.Name);
+                if (!discrFileTable.ContainsKey(fInf))
                 {
-                    column.Cells[cnt].Range.Text = "";
-                    column.Cells[cnt - 1].Merge((column.Cells[cnt]));
+                    discrFileTable[fInf]= new List<FileInfo> { fl };
                 }
                 else
-                    cnt++;
-            }
-                        
-            for (int i = 1; i <= column.Cells.Count; i++)
-            {
-                // Получаем диапазон ячейки
-                Word.Range cellRange = column.Cells[i].Range;
-
-                // Выравнивание по горизонтали
-                cellRange.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-
-                // Выравнивание по вертикали
-                column.Cells[i].VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
-            }
-            for (int i = 2; i <= tbl.Columns[1].Cells.Count; i++)
-            {
-                Cell currentCell = tbl.Columns[1].Cells[i];
-
-                if (!string.IsNullOrWhiteSpace(currentCell.Range.Text))
                 {
-                    currentCell.Range.Text = (i-1).ToString();
+                    discrFileTable[fInf].Add(fl);
                 }
             }
+            int rowNumber = startPosition;
+            foreach (string fInf in discrFileTable.Keys)
+            {
+                int groupStartRow = rowNumber + 1;
+                tbl.Cell(rowNumber+1, 2).Range.Text = fInf;
 
+                foreach (FileInfo f in discrFileTable[fInf])
+                {
+                    rowNumber++;
+                    tbl.Cell(rowNumber, 1).Range.Text = (rowNumber-1).ToString();
+                    tbl.Cell(rowNumber, 3).Range.Text = f.Name;
+                    tbl.Cell(rowNumber, 4).Range.Text = f.Length.ToString("N0");
+                    tbl.Cell(rowNumber, 5).Range.Text = f.CreationTime.ToString("g");
+                }
 
+                if (discrFileTable[fInf].Count > 1)
+                {
+                    // Получаем первую и последнюю ячейки для объединения
+                    Cell firstCell = tbl.Cell(groupStartRow, 2);
+                    Cell lastCell = tbl.Cell(rowNumber, 2);
+                    firstCell.Merge(lastCell);
+
+                    firstCell.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                    firstCell.VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+                }
+            }
+          
             /// сохраняем файл и закрываем его
             wordDocument.SaveAs2(theWay + fName);
             wordDocument.Close();
