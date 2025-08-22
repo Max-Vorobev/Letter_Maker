@@ -138,6 +138,8 @@ namespace Letter_Maker
                     else
                         return "Таблица команд ТУ";
                 }
+                else if (fName.Contains("Таблицы групп по ст.", StringComparison.OrdinalIgnoreCase))
+                    return "Таблицы групп общестанционных объектов";
                 else
                     return "-";
             else if (fName.Contains(".xml"))
@@ -344,6 +346,8 @@ namespace Letter_Maker
             {
                 int groupStartRow = rowNumber + 1;
                 tbl.Cell(rowNumber+1, 2).Range.Text = fInf;
+                tbl.Cell(rowNumber+1,2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                tbl.Cell(rowNumber + 1, 2).VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
 
                 foreach (FileInfo f in discrFileTable[fInf])
                 {

@@ -27,6 +27,7 @@ namespace Letter_Maker.Organisations
                                                         //xls
                                                         "Список изменений сигналов состояния напольных устройств",
                                                         "Список сигналов состояния напольных объектов",
+                                                        "Таблицы групп",
                                                         //xml
                                                         "Список сигналов состояния напольных устройств",
                                                         "Список сигналов состояния устройств УВК РА",
@@ -58,6 +59,10 @@ namespace Letter_Maker.Organisations
                         else if (fl.Name.Contains("SignalList", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Список сигналов состояния напольных объектов");
+                        }
+                        else if (fl.Name.Contains("Таблицы групп по ст.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Таблицы групп");
                         }
                         break;
                     case ".xml":
