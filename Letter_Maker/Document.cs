@@ -269,6 +269,10 @@ namespace Letter_Maker
                         FindAndReplace(fileOpen, "<okt>", "КОПИЯ:\vСлужба Ш Октябрьской\vдирекции инфраструктуры, \vНачальнику отдела развития и перспективных технологий \vП. А. Капусте\v");
                         FindAndReplace(fileOpen, "<okt_mail>", ", sh_kapusta@orw.rzd.ru, pele1968@mail.ru.");
                     }
+                    else if (Aut_Ch[2] == "Московской")
+                    {
+                        FindAndReplace(fileOpen, "<okt_mail>", ", shtcdkdc@mail.ru ");
+                    }
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.YugRkp: // ДЦ Юг с Ркп
