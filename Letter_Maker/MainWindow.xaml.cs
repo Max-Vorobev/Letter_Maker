@@ -130,7 +130,8 @@ namespace Letter_Maker
                                         new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
                                                             author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
                                                             RailRoad_Choise.SelectedItem.ToString(),
-                                                            Station_Name.Text});
+                                                            Station_Name.Text,
+                                                            System_Choise.SelectedItem.ToString()});
             }
         }
 

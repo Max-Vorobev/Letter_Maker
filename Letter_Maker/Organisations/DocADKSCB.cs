@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Word;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,14 +13,14 @@ namespace Letter_Maker.Organisations
         {
             if (folderBrowserDialog.ShowDialog() == WinForms.DialogResult.OK)
             {
-                if (Check(folderBrowserDialog.SelectedPath))
+                if (Check(folderBrowserDialog.SelectedPath, choice[4]))
                     MakeDocument(   folderBrowserDialog.SelectedPath,
                                     organisationList.ADKSCB,
                                     ref choice);
             }
         }
 
-        private bool Check(string selectedPath)
+        private bool Check(string selectedPath, string system)
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
@@ -39,6 +40,8 @@ namespace Letter_Maker.Organisations
                                                             "Мнемосхема шкафа УВК",
                                                             "Мнемосхема каналов УСО"   
                                                       };
+            if (system == "УРЦК")
+                listADK.AddRange(new List<string>() { "Мнемосхемы шкафов УРЦК", "Диагностика связей УРЦК", "Диагностическая информация УРЦК" });
 
             foreach (FileInfo fl in dir.GetFiles())
             {
@@ -72,6 +75,14 @@ namespace Letter_Maker.Organisations
                         {
                             listFiles.Add("Список сигналов состояния устройств КСУ");
                         }
+                        else if (fl.Name.Contains("urckUvkBrief-data", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Диагностика связей УРЦК");
+                        }
+                        else if (fl.Name.Contains("urckProcessed-data", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Диагностическая информация УРЦК");
+                        }
                         break;
                     case ".jpg":
                     case ".png":
@@ -94,6 +105,10 @@ namespace Letter_Maker.Organisations
                         else if (fl.Name.Contains("Uso", StringComparison.OrdinalIgnoreCase) || fl.Name.Contains("УСО", StringComparison.OrdinalIgnoreCase))
                         {
                             listFiles.Add("Мнемосхема каналов УСО");
+                        }
+                        else if ( fl.Name.Contains("УРЦК", StringComparison.OrdinalIgnoreCase))
+                        {
+                            listFiles.Add("Мнемосхемы шкафов УРЦК");
                         }
                         break;
                     default: 

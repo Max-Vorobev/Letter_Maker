@@ -77,10 +77,10 @@ namespace Letter_Maker
             table.Rows[1].Range.Font.Bold = 1;
             /// Задаём ширину каждого столба
             table.Columns[1].Width = 15;
-            table.Columns[2].Width = 130;
+            table.Columns[2].Width = 140;
             table.Columns[3].Width = 230;
             table.Columns[4].Width = 60;
-            table.Columns[5].Width = 80;
+            table.Columns[5].Width = 90;
             /// Заголовочная часть
             table.Cell(1, 1).Range.Text = "№";
             table.Cell(1, 2).Range.Text = "Наименование документа";
@@ -327,7 +327,10 @@ namespace Letter_Maker
             Word.Table tbl = wordDocument.Tables[1];
             tbl.Range.Font.Size = 9;
             tbl.Range.Paragraphs.LineSpacing = 12;
-            
+            // Задаем выравнивание для всей таблицы сразу
+            tbl.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+            tbl.Range.Cells.VerticalAlignment = Word.WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+
             /// Вызов метода для формирования заголовка таблицы
             Zagalovok(tbl);
 
@@ -350,9 +353,6 @@ namespace Letter_Maker
             {
                 int groupStartRow = rowNumber + 1;
                 tbl.Cell(rowNumber+1, 2).Range.Text = fInf;
-                tbl.Cell(rowNumber+1,2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                tbl.Cell(rowNumber + 1, 2).VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
-
                 foreach (FileInfo f in discrFileTable[fInf])
                 {
                     rowNumber++;
@@ -368,12 +368,8 @@ namespace Letter_Maker
                     Cell firstCell = tbl.Cell(groupStartRow, 2);
                     Cell lastCell = tbl.Cell(rowNumber, 2);
                     firstCell.Merge(lastCell);
-
-                    firstCell.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                    firstCell.VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
                 }
             }
-          
             /// сохраняем файл и закрываем его
             wordDocument.SaveAs2(theWay + fName);
             wordDocument.Close();
