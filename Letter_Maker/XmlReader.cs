@@ -24,7 +24,7 @@ public class Author
     [XmlElement("phNumber")]
     public string PhoneNumber { get; set; }
 
-    internal Dictionary<string, string> spisAuthor = new Dictionary<string, string>();
+    internal SortedDictionary<string, string> spisAuthor = new SortedDictionary<string, string>();
 }
 
 [Serializable]
