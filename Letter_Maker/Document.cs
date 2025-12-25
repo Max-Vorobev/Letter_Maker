@@ -13,7 +13,6 @@ namespace Letter_Maker
 {
     internal class Document : MainWindow
     {
-
         public Document() { }
 
         // Перечисления организаций
@@ -235,28 +234,28 @@ namespace Letter_Maker
             {
                 case organisationList.Kit: // АПК ДК КИТ
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Kit.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин А.А.Иванову", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Еремин А.А. Иванову", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen,ref Aut_Ch);
                     break;
                 case organisationList.ADKSCB: // АДК СЦБ ЮгПа
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ADKSCB.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин С.А.Панову", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Еремин С.А. Панову", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.ASDK: // АСДК
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\ASDK.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин С.А.Аверкиеву", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Еремин С.А. Аверкиеву", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
                     break;
                 case organisationList.Setun:// Сетунь
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Setun.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин П.В.Бармину", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Еремин П.В. Бармину", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     if (Aut_Ch[2] == "Приволжской")
@@ -277,7 +276,7 @@ namespace Letter_Maker
                     break;
                 case organisationList.YugRkp: // ДЦ Юг с Ркп
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\YugRkp.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Еремин Л.П.Кузнецову", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Еремин Л.П. Кузнецову", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     listOfChage(ref fileOpen, ref Aut_Ch);
@@ -291,7 +290,7 @@ namespace Letter_Maker
                     break;
                 case organisationList.Textrans: // ДЦ Тракт - "Техтрнас"
                     wordDocument = fileOpen.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\Textrans.doc", ReadOnly: false);
-                    fName = MakeFileName("М.А.Ерёмин А.С.Павлову", Aut_Ch[3]);
+                    fName = MakeFileName("М.А.Ерёмин А.С. Павлову", Aut_Ch[3]);
                     fileOpen.Visible = false;
                     wordDocument.Activate();
                     if (Aut_Ch[2] == "Октябрьской")

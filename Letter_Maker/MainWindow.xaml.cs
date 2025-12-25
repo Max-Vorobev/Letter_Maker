@@ -15,6 +15,8 @@ namespace Letter_Maker
     {
         Author author = new Author();
         rrList rrSpis = new rrList();
+        bool isURCK = false;
+        bool isABTCMSH = false;
 
         public MainWindow()
         {
@@ -24,7 +26,7 @@ namespace Letter_Maker
 
             try
             {
-                using (FileStream fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\0_Authors.xml", FileMode.Open))
+                using ( FileStream fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "\\Template\\0_Authors.xml", FileMode.Open ))
                 {
                     ListModel listModel = (ListModel)formatter.Deserialize(fs);
 
@@ -35,7 +37,6 @@ namespace Letter_Maker
                             author.spisAuthor.Add(person.Name, person.PhoneNumber);
                         }
                         
-
                         foreach (string org in listModel.rrLst)
                         {
                             rrSpis.spisRR.Add(org);
@@ -52,15 +53,12 @@ namespace Letter_Maker
                 MessageBox.Show($"Ошибка десериализации: {ex.Message}");
             }
             rrSpis.spisRR.Sort();
-            
-            List<string> systemChoise = new List<string> { "Отсутствует","АБТЦ-МШ", "УРЦК"};
-
+                    
             Author_Choise.ItemsSource = author.spisAuthor.Keys.Select(key => key.Split(' ').First());
             Author_Choise.SelectedIndex = startPosition;
             RailRoad_Choise.ItemsSource = rrSpis.spisRR;
             RailRoad_Choise.SelectedIndex = startPosition;
-            System_Choise.ItemsSource = systemChoise;
-            System_Choise.SelectedIndex = startPosition;
+           
         }
 
         /// Метод, в котором вызывается диалоговое окно для выбора папки, где лежат файлы
@@ -75,11 +73,11 @@ namespace Letter_Maker
         private void only_table_Click(object sender, RoutedEventArgs e)
         {
             var foulder = Folder_choice();
-            if (foulder.ShowDialog() == WinForms.DialogResult.OK)
+            if ( foulder.ShowDialog() == WinForms.DialogResult.OK )
             {
                 Document dc = new Document();
                 List<string> list = new List<string>();
-                dc.MakeDocument(foulder.SelectedPath,Document.organisationList.Table,ref list);
+                dc.MakeDocument( foulder.SelectedPath, Document.organisationList.Table,ref list );
             }
         }
         /// Метод для каждой отдельной организации
@@ -87,17 +85,21 @@ namespace Letter_Maker
         {
             if (WindowOfEmptiness(Station_Name.Text))
             {
-                DocKit kit = new DocKit(Folder_choice(),
-                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                            RailRoad_Choise.SelectedItem.ToString(),
-                                                            Station_Name.Text,
-                                                            System_Choise.SelectedItem.ToString()});
+                List<string> chosenOptions = new List<string>
+                {
+                    author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                    author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                    RailRoad_Choise.SelectedItem.ToString(),
+                    Station_Name.Text
+                };
+                if (isURCK)
+                    chosenOptions.Add("УРЦК");
+                if (isABTCMSH)
+                    chosenOptions.Add("АБТЦ-МШ");
+                DocKit kit = new DocKit( Folder_choice(), chosenOptions );
             }
         }
-
-
-
+        
         private void setun_table_Click(object sender, RoutedEventArgs e)
         {
             if (WindowOfEmptiness(Station_Name.Text))
@@ -124,14 +126,17 @@ namespace Letter_Maker
         }
         private void adk_scb_table_Click(object sender, RoutedEventArgs e)
         {
+            
             if (WindowOfEmptiness(Station_Name.Text))
             {
-                DocADKSCB adk = new DocADKSCB(Folder_choice(),
-                                        new List<string> {  author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
-                                                            author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
-                                                            RailRoad_Choise.SelectedItem.ToString(),
-                                                            Station_Name.Text,
-                                                            System_Choise.SelectedItem.ToString()});
+                List<string> chosenOptions = new List<string>
+                {
+                    author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Key,
+                    author.spisAuthor.FirstOrDefault(x => x.Key.StartsWith(Author_Choise.SelectedItem.ToString())).Value,
+                    RailRoad_Choise.SelectedItem.ToString(),
+                    Station_Name.Text
+                };
+                DocADKSCB adk = new DocADKSCB( Folder_choice(), chosenOptions );
             }
         }
 
@@ -184,6 +189,24 @@ namespace Letter_Maker
                 return result == MessageBoxResult.Yes;
             }
             return true;
+        }
+
+        private void checkBox1_Checked(object sender, RoutedEventArgs e)
+        {
+            isURCK = true;
+        }
+        private void checkBox1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            isURCK = false;
+        }
+
+        private void checkBox2_Checked(object sender, RoutedEventArgs e)
+        {
+            isABTCMSH = true;
+        }
+        private void checkBox2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            isABTCMSH = false;
         }
     }
 }

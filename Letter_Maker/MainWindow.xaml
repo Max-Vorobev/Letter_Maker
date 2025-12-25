@@ -74,10 +74,13 @@
             </TextBox.Style>
         </TextBox>
 
-        
-            <Label  Content="Система" Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Padding="0,-5,0,0"
+
+            <Label  Content="Системы" Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Padding="0,-5,0,0"
                     BorderBrush="Black" BorderThickness="1"/>
-            <ComboBox x:Name="System_Choise" Grid.Row="3" Grid.Column="1" Margin="1,20,1,1"  />
+            <StackPanel x:Name="stackPanel1" Grid.Row="3" Grid.Column="1" Margin="5,20,0,0">
+                <CheckBox x:Name="checkBox1" IsChecked="False" Height="20" Content="УРЦК" Unchecked="checkBox1_Unchecked" Checked="checkBox1_Checked" />
+                <CheckBox x:Name="checkBox2" IsChecked="False" Height="20" Content="АБТЦ-МШ" Unchecked="checkBox2_Unchecked" Checked="checkBox2_Checked" />
+            </StackPanel>
         </Grid>
     </Border>
 </Window>

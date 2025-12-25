@@ -8,18 +8,18 @@ namespace Letter_Maker.Organisations
 {
     internal class DocKit : Document
     {
-        internal DocKit(WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice )
+        internal DocKit( WinForms.FolderBrowserDialog folderBrowserDialog, List<string> choice )
         {
-            if (folderBrowserDialog.ShowDialog() == WinForms.DialogResult.OK)
+            if (  folderBrowserDialog.ShowDialog() == WinForms.DialogResult.OK )
             {
-                if (Check(folderBrowserDialog.SelectedPath, choice[4]))
+                if ( Check( folderBrowserDialog.SelectedPath, choice ))
                     MakeDocument(folderBrowserDialog.SelectedPath,
                                     organisationList.Kit,
                                     ref choice);
             }
         }
         
-        private bool Check(string selectedPath, string system)
+        private bool Check(string selectedPath, List<string> choice)
         {
             DirectoryInfo dir = new DirectoryInfo(selectedPath);
             List<string> listFiles = new List<string>();
@@ -40,11 +40,10 @@ namespace Letter_Maker.Organisations
                                                         "Мнемосхема каналов УСО",
                                                         "Мнемосхема шкафа УВК"
                                                   };
-
-            if (system == "АБТЦ-МШ")
-                listKit.Add("Список сигналов состояния устройств АБТЦ-МШ");
-            else if (system == "УРЦК")
+            if (choice[choice.Count-2]=="УРЦК" || choice[choice.Count - 1] == "УРЦК")
                 listKit.AddRange(new List<string>() { "Мнемосхемы шкафов УРЦК", "Диагностика связей УРЦК", "Диагностическая информация УРЦК" });
+            if (choice[choice.Count - 2] == "АБТЦ-МШ" || choice[choice.Count - 1] == "АБТЦ-МШ")
+                listKit.Add( "Список сигналов состояния устройств АБТЦ-МШ" );
 
             foreach (FileInfo fl in dir.GetFiles())
             {
